@@ -2,10 +2,17 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "./firebase/config";
 import { useRutina } from "./Hooks/useRutina";
 import { FaCheckCircle, FaRegCircle } from "react-icons/fa";
-import  dayjs  from "dayjs";
+import { obtenerRangoDeHoras } from "./utils/horasUtils";
+
+import dayjs from "dayjs";
 
 function App() {
   const { actividades, isLoading, setActividades } = useRutina(); //llama al hook y obtiene la rutina
+
+  if (!isLoading) {
+    const rango = obtenerRangoDeHoras(actividades);
+    console.log("Rango de horas:", rango);
+  }
 
   // Mientras cargan los datos muestra un mensaje
   if (isLoading) {
@@ -42,7 +49,10 @@ function App() {
                   : "bg-white border-blue-500"
               }`}
             >
-              <p className="text-sm text-gray-500">{actividad.hora}</p>
+              <p className="text-sm text-gray-500">
+                {actividad.horaInicio || actividad.hora} -{" "}
+                {actividad.horaFin || ""}
+              </p>
               <p
                 className={`text-lg ${
                   actividad.completado ? "line-through" : ""
